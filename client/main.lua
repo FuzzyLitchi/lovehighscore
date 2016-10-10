@@ -8,8 +8,7 @@ local list = {}
 
 local size = 20
 local spacing = size + 10
-local x_offset = 60
-local y_offset = 30
+local x_offset = 80
 
 function love.load()
   udp = socket.udp()
@@ -44,7 +43,11 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setBackgroundColor(230, 69, 123)
+  love.graphics.setColor(230, 69, 123)
+  love.graphics.rectangle("fill", 0, 0, w, spacing)
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.print("Name", x_offset, 0)
+  love.graphics.print("Points", w/2+x_offset, 0)
 
   for i=1, math.ceil(h/spacing) do
     if i%2==0 then
@@ -52,13 +55,13 @@ function love.draw()
     else
       love.graphics.setColor(80, 150, 250)
     end
-    love.graphics.rectangle("fill", x_offset, y_offset+i*spacing, 400+x_offset, spacing)
+    love.graphics.rectangle("fill", 0, i*spacing, w, spacing)
   end
 
   love.graphics.setColor(0, 0, 0)
   for i,v in pairs(list) do
-    love.graphics.print(v.name, x_offset, y_offset+i*spacing)
-    love.graphics.print(v.points, 300+x_offset, y_offset+i*spacing)
+    love.graphics.print(v.name, x_offset, i*spacing)
+    love.graphics.print(v.points, w/2+x_offset, i*spacing)
   end
 end
 
