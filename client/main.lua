@@ -53,6 +53,7 @@ function love.draw()
 
   love.graphics.setColor(0, 0, 0)
   for i,v in pairs(list) do
+    love.graphics.print(i, 10, i*spacing)
     love.graphics.print(v.name, x_offset, i*spacing)
     love.graphics.print(v.points, w/2+x_offset, i*spacing)
   end
