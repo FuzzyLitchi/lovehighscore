@@ -6,9 +6,9 @@ local t = 0
 
 local list = {}
 
+local x_offset = 80
 local size = 20
 local spacing = size + 10
-local x_offset = 80
 
 function love.load()
   udp = socket.udp()
@@ -17,8 +17,9 @@ function love.load()
   math.randomseed(os.time())
 
   w, h = love.graphics.getDimensions()
-  font = love.graphics.newFont("Lato-Light.ttf",  size)
-  love.graphics.setFont(font)
+  x_offset = x_offset / w
+  size = size / h
+  spacing = spacing / h
 
   --get info
   udp:send("start")
@@ -36,26 +37,33 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(230, 69, 123)
-  love.graphics.rectangle("fill", 0, 0, w, spacing)
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.print("Name", x_offset, 0)
-  love.graphics.print("Points", w/2+x_offset, 0)
+  w, h = love.graphics.getDimensions()
+  dx_offset = x_offset * w
+  dsize = size * h
+  dspacing = spacing* h
+  font = love.graphics.newFont("Lato-Light.ttf",  dsize)
+  love.graphics.setFont(font)
 
-  for i=1, math.ceil(h/spacing) do
+  love.graphics.setColor(230, 69, 123)
+  love.graphics.rectangle("fill", 0, 0, w, dspacing)
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.print("Name", dx_offset, 0)
+  love.graphics.print("Points", w/2+dx_offset, 0)
+
+  for i=1, math.ceil(h/dspacing) do
     if i%2==0 then
       love.graphics.setColor(69, 123, 230)
     else
       love.graphics.setColor(80, 150, 250)
     end
-    love.graphics.rectangle("fill", 0, i*spacing, w, spacing)
+    love.graphics.rectangle("fill", 0, i*dspacing, w, dspacing)
   end
 
   love.graphics.setColor(0, 0, 0)
   for i,v in pairs(list) do
-    love.graphics.print(i, 10, i*spacing)
-    love.graphics.print(v.name, x_offset, i*spacing)
-    love.graphics.print(v.points, w/2+x_offset, i*spacing)
+    love.graphics.print(i, 10, i*dspacing)
+    love.graphics.print(v.name, dx_offset, i*dspacing)
+    love.graphics.print(v.points, w/2+dx_offset, i*dspacing)
   end
 end
 
