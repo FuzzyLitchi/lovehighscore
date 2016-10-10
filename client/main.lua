@@ -1,6 +1,6 @@
 local socket = require "socket"
 
-local address, port = "localhost", 7788
+local address, port = "localhost", 7788 --NOTE type server here plz
 local updaterate = 0.1
 local t = 0
 
@@ -19,6 +19,21 @@ function love.load()
   w, h = love.graphics.getDimensions()
   font = love.graphics.newFont("Lato-Light.ttf",  size)
   love.graphics.setFont(font)
+
+  --get info
+  udp:send("start")
+  repeat
+  	data, msg = udp:receive()
+
+  	if data then
+  			name, points = data:match("^(%w*) (%d*)")
+
+        table.insert(list, {name=name, points=tonumber(points)})
+
+  	elseif msg ~= 'timeout' then
+  		error("Network error: "..tostring(msg))
+  	end
+  until not data
 end
 
 function love.update(dt)
