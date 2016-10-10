@@ -22,18 +22,7 @@ function love.load()
 
   --get info
   udp:send("start")
-  repeat
-  	data, msg = udp:receive()
-
-  	if data then
-  			name, points = data:match("^(%w*) (%d*)")
-
-        table.insert(list, {name=name, points=tonumber(points)})
-
-  	elseif msg ~= 'timeout' then
-  		error("Network error: "..tostring(msg))
-  	end
-  until not data
+  receive_udp()
 end
 
 function love.update(dt)
@@ -41,18 +30,7 @@ function love.update(dt)
 
   if t > updaterate then t = 0; udp:send("update") end
 
-  repeat
-  	data, msg = udp:receive()
-
-  	if data then
-  			name, points = data:match("^(%w*) (%d*)")
-
-        table.insert(list, {name=name, points=tonumber(points)})
-
-  	elseif msg ~= 'timeout' then
-  		error("Network error: "..tostring(msg))
-  	end
-  until not data
+  receive_udp()
 
   table.sort(list, function(a,b) return a.points>b.points end)
 end
@@ -82,4 +60,19 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
   udp:send(string.format("JHN %d", math.random(0, 20)))
+end
+
+function receive_udp ()
+  repeat
+  	data, msg = udp:receive()
+
+  	if data then
+  			name, points = data:match("^(%w*) (%d*)")
+
+        table.insert(list, {name=name, points=tonumber(points)})
+
+  	elseif msg ~= 'timeout' then
+  		error("Network error: "..tostring(msg))
+  	end
+  until not data
 end
