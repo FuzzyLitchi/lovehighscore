@@ -1,7 +1,8 @@
 local socket = require "socket"
 
-local address, port = "localhost", 1073
+local address, port = "localhost", 7788
 local updaterate = 0.1
+local t = 0
 
 local list = {}
 list = {{name="JHN", points=1000},{name="NHN", points=-1337}}
@@ -23,6 +24,10 @@ function love.load()
 end
 
 function love.update(dt)
+  t = t + dt
+
+  if t > updaterate then t = 0; udp:send("update") end
+
   repeat
   	data, msg = udp:receive()
 
