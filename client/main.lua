@@ -5,7 +5,6 @@ local updaterate = 0.1
 local t = 0
 
 local list = {}
-list = {{name="JHN", points=1000},{name="NHN", points=-1337}}
 
 local size = 20
 local spacing = size + 10
@@ -34,12 +33,14 @@ function love.update(dt)
   	if data then
   			name, points = data:match("^(%w*) (%d*)")
 
-        table.insert(list, {name=name, points=points})
+        table.insert(list, {name=name, points=tonumber(points)})
 
   	elseif msg ~= 'timeout' then
   		error("Network error: "..tostring(msg))
   	end
   until not data
+
+  table.sort(list, function(a,b) return a.points>b.points end)
 end
 
 function love.draw()
@@ -62,5 +63,5 @@ function love.draw()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-  udp:send("JHN 1230")
+  udp:send(string.format("JHN %d", math.random(0, 20)))
 end
