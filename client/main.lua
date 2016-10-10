@@ -60,3 +60,7 @@ function love.draw()
     love.graphics.print(v.points, 300+x_offset, y_offset+i*spacing)
   end
 end
+
+function love.keypressed(key, scancode, isrepeat)
+  udp:send("JHN 1230")
+end
