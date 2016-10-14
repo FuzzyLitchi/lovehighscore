@@ -67,16 +67,12 @@ function love.draw()
   end
 end
 
-function love.keypressed(key, scancode, isrepeat)
-  udp:send(string.format("JHN %d", math.random(0, 20)))
-end
-
 function receive_udp ()
   repeat
   	data, msg = udp:receive()
 
   	if data then
-  			name, points = data:match("^(%w*) (%d*)")
+  			name, points = data:match("^(.*):(.*)$")
 
         table.insert(list, {name=name, points=tonumber(points)})
 
